@@ -1,0 +1,29 @@
+{
+  "name": "Node 24 Toolbelt",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24",
+  "remoteUser": "node",
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/.config/gh,target=/home/node/.config/gh"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.inlineSuggest.enabled": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "eslint.validate": ["javascript", "typescript", "json"]
+      },
+      "extensions": [
+        "github.copilot",
+        "github.copilot-chat",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "postStartCommand": "node -v && npm -v && gh --version"
+}
