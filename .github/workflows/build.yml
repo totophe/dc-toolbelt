@@ -18,9 +18,9 @@ jobs:
           - name: node24
             context: containers/node24
             tagsuffix: node24
-        #   - name: node24-gcloud
-        #     context: containers/node24-gcloud
-        #     tagsuffix: node24-gcloud
+          - name: node24-gcloud
+            context: containers/node24-gcloud
+            tagsuffix: node24-gcloud
 
     steps:
       - name: Checkout

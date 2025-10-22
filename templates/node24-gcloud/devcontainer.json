@@ -1,0 +1,20 @@
+{
+  "name": "Node 24 Toolbelt (gcloud)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-gcloud",
+  "remoteUser": "node",
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/.config/gh,target=/home/node/.config/gh",
+    "type=bind,source=${localEnv:HOME}/.config/gcloud,target=/home/node/.config/gcloud"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
+      "extensions": [
+        "GoogleCloudTools.cloudcode"   // optional, but handy
+      ]
+    }
+  },
+  "postStartCommand": "gcloud --version && gsutil --version && bq --version"
+}

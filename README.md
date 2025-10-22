@@ -28,14 +28,19 @@ A comprehensive Node.js development environment with:
 ### Node.js 24 + Google Cloud (`node24-gcloud`)
 **Image**: `ghcr.io/totophe/dc-toolbelt:node24-gcloud`
 
-*Coming soon* - Node.js 24 image with Google Cloud SDK pre-installed.
+Extends the Node.js 24 image with Google Cloud development tools:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Google Cloud CLI**: gcloud, gsutil, bq commands
+- **GKE Auth Plugin**: Kubernetes cluster authentication
+- **Pre-configured**: Ready-to-use gcloud config directory
 
 ## 🚀 Quick Start
 
 ### Using with devcontainer.json
 
-Copy the appropriate template from the `templates/` directory or use this basic configuration:
+Copy the appropriate template from the `templates/` directory:
 
+**For Node.js development:**
 ```json
 {
   "name": "Node 24 Toolbelt",
@@ -62,10 +67,39 @@ Copy the appropriate template from the `templates/` directory or use this basic 
 }
 ```
 
+**For Node.js + Google Cloud development:**
+```json
+{
+  "name": "Node 24 Toolbelt (gcloud)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-gcloud",
+  "remoteUser": "node",
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/.config/gh,target=/home/node/.config/gh",
+    "type=bind,source=${localEnv:HOME}/.config/gcloud,target=/home/node/.config/gcloud"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      },
+      "extensions": [
+        "GoogleCloudTools.cloudcode",
+        "github.copilot",
+        "github.copilot-chat"
+      ]
+    }
+  }
+}
+```
+
 ### Using with Docker
 
 ```bash
+# Node.js development
 docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24
+
+# Node.js + Google Cloud development
+docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-gcloud
 ```
 
 ## 🛠 What's Included
@@ -91,15 +125,22 @@ docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24
 - **Safe directories**: Configured for devcontainer workspaces
 - **Default formatter**: Prettier with VS Code integration
 
+### Google Cloud Tools *(node24-gcloud only)*
+- **Google Cloud CLI**: gcloud, gsutil, bq commands
+- **GKE Auth Plugin**: Kubernetes cluster authentication
+- **VS Code Extension**: Google Cloud Code extension pre-configured
+- **Config mounting**: Ready-to-mount gcloud config directory
+
 ## 📂 Repository Structure
 
 ```
 dc-toolbelt/
 ├── containers/          # Dockerfile sources
 │   ├── node24/         # Node.js 24 image
-│   └── node24-cloud/   # Node.js 24 + Google Cloud (planned)
+│   └── node24-gcloud/  # Node.js 24 + Google Cloud image
 ├── templates/          # Ready-to-use devcontainer.json templates
-│   └── node24/
+│   ├── node24/         # Basic Node.js template
+│   └── node24-gcloud/  # Node.js + Google Cloud template
 ├── brand/             # Logo and branding assets
 └── README.md
 ```
