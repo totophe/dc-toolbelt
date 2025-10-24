@@ -60,12 +60,21 @@ jobs:
             org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe
             org.opencontainers.image.licenses=MIT
 
-  build-gcloud:
+  build-cloud:
     needs: build-base
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        variant:
+          - name: gcloud
+            context: containers/node24-gcloud
+          - name: azure
+            context: containers/node24-azure
+          - name: aws
+            context: containers/node24-aws
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,20 +104,20 @@ jobs:
             [[ -n "${PATCH}" ]] && echo "patch=${PATCH}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build & Push node24-gcloud
+      - name: Build & Push node24-${{ matrix.variant.name }}
         uses: docker/build-push-action@v6
         with:
-          context: containers/node24-gcloud
+          context: ${{ matrix.variant.context }}
           push: true
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/totophe/dc-toolbelt:node24-gcloud
-            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-gcloud', steps.ver.outputs.version) || '' }}
-            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-gcloud', steps.ver.outputs.major) || '' }}
-            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-node24-gcloud', steps.ver.outputs.major, steps.ver.outputs.minor) || '' }}
-            ${{ steps.ver.outputs.is_tag == 'true' && 'ghcr.io/totophe/dc-toolbelt:latest-node24-gcloud' || '' }}
+            ghcr.io/totophe/dc-toolbelt:node24-${{ matrix.variant.name }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-{1}', steps.ver.outputs.version, matrix.variant.name) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-{1}', steps.ver.outputs.major, matrix.variant.name) || '' }}
+            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-node24-{2}', steps.ver.outputs.major, steps.ver.outputs.minor, matrix.variant.name) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:latest-node24-{0}', matrix.variant.name) || '' }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe

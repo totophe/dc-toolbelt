@@ -1,10 +1,10 @@
 {
-  "name": "Node 24 Toolbelt (gcloud)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-gcloud",
+  "name": "Node 24 Toolbelt (aws)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-aws",
   "remoteUser": "node",
   "mounts": [
     "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-gcloud-config,target=/home/node/.config/gcloud,type=volume"
+    "source=dc-toolbelt-aws-config,target=/home/node/.aws,type=volume"
   ],
   "customizations": {
     "vscode": {
@@ -15,7 +15,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
       },
       "extensions": [
-        "GoogleCloudTools.cloudcode",
+        "amazonwebservices.aws-toolkit-vscode",
         "github.copilot",
         "github.copilot-chat",
         "esbenp.prettier-vscode",
@@ -23,5 +23,5 @@
       ]
     }
   },
-  "postStartCommand": "gcloud --version && gsutil --version && bq --version"
+  "postStartCommand": "aws --version"
 }

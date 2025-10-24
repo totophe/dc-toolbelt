@@ -3,7 +3,7 @@
   "image": "ghcr.io/totophe/dc-toolbelt:node24",
   "remoteUser": "node",
   "mounts": [
-    "type=bind,source=${localEnv:HOME}/.config/gh,target=/home/node/.config/gh"
+    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
   ],
   "customizations": {
     "vscode": {
