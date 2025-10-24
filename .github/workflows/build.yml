@@ -7,21 +7,11 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build:
+  build-base:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    strategy:
-      matrix:
-        flavor:
-          - name: node24
-            context: containers/node24
-            tagsuffix: node24
-          - name: node24-gcloud
-            context: containers/node24-gcloud
-            tagsuffix: node24-gcloud
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,20 +41,74 @@ jobs:
             [[ -n "${PATCH}" ]] && echo "patch=${PATCH}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build & Push ${{ matrix.flavor.name }}
+      - name: Build & Push node24
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.flavor.context }}
+          context: containers/node24
           push: true
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/totophe/dc-toolbelt:${{ matrix.flavor.tagsuffix }}
-            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-{1}', steps.ver.outputs.version, matrix.flavor.tagsuffix) || '' }}
-            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-{1}', steps.ver.outputs.major,  matrix.flavor.tagsuffix) || '' }}
-            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-{2}', steps.ver.outputs.major, steps.ver.outputs.minor, matrix.flavor.tagsuffix) || '' }}
-            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:latest-{0}', matrix.flavor.tagsuffix) || '' }}
+            ghcr.io/totophe/dc-toolbelt:node24
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24', steps.ver.outputs.version) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24', steps.ver.outputs.major) || '' }}
+            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-node24', steps.ver.outputs.major, steps.ver.outputs.minor) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && 'ghcr.io/totophe/dc-toolbelt:latest-node24' || '' }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe
+            org.opencontainers.image.licenses=MIT
+
+  build-gcloud:
+    needs: build-base
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive version variables
+        id: ver
+        shell: bash
+        run: |
+          echo "is_tag=false" >> "$GITHUB_OUTPUT"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" =~ ^v[0-9]+(\.[0-9]+){0,2}$ ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+            IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION}"
+            echo "is_tag=true"     >> "$GITHUB_OUTPUT"
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+            echo "major=${MAJOR}"  >> "$GITHUB_OUTPUT"
+            [[ -n "${MINOR}" ]] && echo "minor=${MINOR}" >> "$GITHUB_OUTPUT"
+            [[ -n "${PATCH}" ]] && echo "patch=${PATCH}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build & Push node24-gcloud
+        uses: docker/build-push-action@v6
+        with:
+          context: containers/node24-gcloud
+          push: true
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/totophe/dc-toolbelt:node24-gcloud
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-gcloud', steps.ver.outputs.version) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-gcloud', steps.ver.outputs.major) || '' }}
+            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-node24-gcloud', steps.ver.outputs.major, steps.ver.outputs.minor) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && 'ghcr.io/totophe/dc-toolbelt:latest-node24-gcloud' || '' }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe

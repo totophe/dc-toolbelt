@@ -20,7 +20,7 @@ Opinionated devcontainer images for everyday development work. One repository, m
 
 A comprehensive Node.js development environment with:
 - **Base**: Node.js 24 on Debian Bookworm (slim)
-- **Tools**: Git, GitHub CLI, ripgrep, jq, nano, curl, wget
+- **Tools**: Git, GitHub CLI, PostgreSQL client, ripgrep, jq, nano, curl, wget
 - **Node.js globals**: TypeScript, ESLint, Prettier, tsx, npm-check-updates
 - **Shell**: Zsh with Oh My Zsh (robbyrussell theme)
 - **User**: `node` with helpful aliases and git configuration
@@ -107,7 +107,8 @@ docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-gcloud
 ### System Tools
 - **Shell**: Zsh with Oh My Zsh
 - **Version Control**: Git + Git LFS + GitHub CLI
-- **Utilities**: ripgrep, jq, curl, wget, nano, less
+- **Database**: PostgreSQL client (psql, pg_dump, pg_restore)
+- **Utilities**: ripgrep, jq, curl, wget, nano, less, sudo (passwordless)
 - **Locale**: UTF-8 configured
 
 ### Node.js Stack

@@ -7,8 +7,12 @@ USER root
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
      zsh git git-lfs curl wget ca-certificates gnupg nano less openssh-client \
-     jq ripgrep locales \
+     jq ripgrep locales postgresql-client sudo \
   && rm -rf /var/lib/apt/lists/*
+
+# --- Grant passwordless sudo to node user ---
+RUN echo "node ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/node \
+  && chmod 0440 /etc/sudoers.d/node
 
 # --- UTF-8 locale (prevents weird encoding issues) ---
 RUN sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
