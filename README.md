@@ -294,7 +294,7 @@ Use the built-in installer to scaffold an Astro site configured for GitHub Pages
 
 ```bash
 # Interactive (prompts for project name)
-curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh)"
 
 # Non-interactive (pass name as arg)
 curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash -s -- "My Awesome Astro Site"

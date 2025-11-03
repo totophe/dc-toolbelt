@@ -7,14 +7,24 @@ set -euo pipefail
 # - Copies template files into current directory
 # - Creates .devcontainer using node24-astro image
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_PATH="${BASH_SOURCE[0]:-}"
+SCRIPT_DIR=""
+if [[ -n "$SCRIPT_PATH" && -f "$SCRIPT_PATH" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+fi
 TEMPLATE_DIR="$SCRIPT_DIR"
 TARGET_DIR="$(pwd)"
 
 # Remote fallback (for curl-installed usage)
-REPO_RAW_BASE="https://raw.githubusercontent.com/totophe/dc-toolbelt/main"
-TEMPLATE_BASE_URL="$REPO_RAW_BASE/templates/astro-github"
-DEVCONTAINER_URL="$REPO_RAW_BASE/templates/node24-astro/devcontainer.json"
+# Try standard branch URL first, then refs/heads form for compatibility
+REPO_SLUG="totophe/dc-toolbelt"
+REPO_BRANCH="main"
+REPO_RAW_BASE_STD="https://raw.githubusercontent.com/${REPO_SLUG}/${REPO_BRANCH}"
+REPO_RAW_BASE_REF="https://raw.githubusercontent.com/${REPO_SLUG}/refs/heads/${REPO_BRANCH}"
+TEMPLATE_BASE_URL_STD="$REPO_RAW_BASE_STD/templates/astro-github"
+TEMPLATE_BASE_URL_REF="$REPO_RAW_BASE_REF/templates/astro-github"
+DEVCONTAINER_URL_STD="$REPO_RAW_BASE_STD/templates/node24-astro/devcontainer.json"
+DEVCONTAINER_URL_REF="$REPO_RAW_BASE_REF/templates/node24-astro/devcontainer.json"
 
 echo "→ Astro + GitHub scaffold installer"
 
@@ -31,7 +41,7 @@ fi
 # slugify: lowercase, replace non-alnum with '-', trim dashes, collapse repeats
 slugify() {
   local s="$1"
-  s="${s,,}"                           # lowercase
+  s="$(printf '%s' "$s" | tr '[:upper:]' '[:lower:]')" # lowercase (portable)
   s="${s// /-}"                        # spaces -> -
   s="${s//_/-}"                        # underscores -> -
   s="$(echo "$s" | tr -cd 'a-z0-9-')"  # allow only a-z0-9-
@@ -47,6 +57,15 @@ if [[ -z "$PROJECT_SLUG" ]]; then
 fi
 
 echo "→ Using slug: $PROJECT_SLUG"
+
+# Set destination folder based on slug and ensure it's safe to use
+TARGET_DIR="$TARGET_DIR/$PROJECT_SLUG"
+if [[ -d "$TARGET_DIR" && -n "$(ls -A "$TARGET_DIR" 2>/dev/null)" ]]; then
+  echo "Target directory already exists and is not empty: $TARGET_DIR" >&2
+  echo "Choose a different project name or remove/empty the directory." >&2
+  exit 1
+fi
+mkdir -p "$TARGET_DIR"
 
 # Helper for portable in-place sed (macOS/Linux)
 sedin() {
@@ -75,12 +94,20 @@ fetch_or_copy() {
       exit 1
     fi
     mkdir -p "$(dirname "$dest")"
-    curl -fsSL "$TEMPLATE_BASE_URL/$rel" -o "$dest"
+    # Try standard branch URL first
+    if ! curl -fsSL "$TEMPLATE_BASE_URL_STD/$rel" -o "$dest"; then
+      # Fallback to refs/heads form
+      if ! curl -fsSL "$TEMPLATE_BASE_URL_REF/$rel" -o "$dest"; then
+        echo "Failed to fetch template '$rel' from remote." >&2
+        echo "Tried: $TEMPLATE_BASE_URL_STD/$rel and $TEMPLATE_BASE_URL_REF/$rel" >&2
+        exit 1
+      fi
+    fi
   fi
 }
 
 # Copy Astro skeleton (local if available, otherwise fetch from GitHub)
-echo "→ Getting Astro project files"
+echo "→ Getting Astro project files into: $TARGET_DIR"
 fetch_or_copy "package.json" "$TARGET_DIR/package.json"
 fetch_or_copy "astro.config.mjs" "$TARGET_DIR/astro.config.mjs"
 mkdir -p "$TARGET_DIR/src/pages" "$TARGET_DIR/public"
@@ -101,7 +128,12 @@ if [[ -f "$ASTRO_DEVCONTAINER_LOCAL" ]]; then
   cp "$ASTRO_DEVCONTAINER_LOCAL" "$TARGET_DIR/.devcontainer/devcontainer.json"
 else
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL "$DEVCONTAINER_URL" -o "$TARGET_DIR/.devcontainer/devcontainer.json"
+    if ! curl -fsSL "$DEVCONTAINER_URL_STD" -o "$TARGET_DIR/.devcontainer/devcontainer.json"; then
+      if ! curl -fsSL "$DEVCONTAINER_URL_REF" -o "$TARGET_DIR/.devcontainer/devcontainer.json"; then
+        echo "Warning: Failed to fetch Astro devcontainer template from remote." >&2
+        echo "Tried: $DEVCONTAINER_URL_STD and $DEVCONTAINER_URL_REF" >&2
+      fi
+    fi
   else
     echo "Warning: Astro devcontainer template not found locally and 'curl' not available to fetch: $ASTRO_DEVCONTAINER_LOCAL" >&2
   fi
@@ -115,16 +147,16 @@ sedin "s/__PROJECT_SLUG__/${PROJECT_SLUG}/g" "$TARGET_DIR/astro.config.mjs"
 # Leave __GITHUB_USER__ as a placeholder; user can replace later or Pages will still work for org/user pages
 
 # Initialize git repo and make initial commit (non-interactive)
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+if ! git -C "$TARGET_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "→ Initializing git repository"
-  git init >/dev/null 2>&1 || true
+  git -C "$TARGET_DIR" init >/dev/null 2>&1 || true
 fi
 
 # Stage all files
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  git add . >/dev/null 2>&1 || true
+if git -C "$TARGET_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git -C "$TARGET_DIR" add . >/dev/null 2>&1 || true
   # Attempt commit only if user identity is configured. If not, skip gracefully.
-  if git -c user.useConfigOnly=true commit -m "init: Astro site via dc-toolbelt" >/dev/null 2>&1; then
+  if git -C "$TARGET_DIR" -c user.useConfigOnly=true commit -m "init: Astro site via dc-toolbelt" >/dev/null 2>&1; then
     echo "→ Created initial commit"
   else
     echo "→ Skipped initial commit (configure git user.name and user.email); changes are staged"
@@ -136,13 +168,14 @@ cat <<EOF
 ✔ Done!
 
 Next steps:
-  1) Open this folder in VS Code and reopen in container when prompted.
-  2) Create a GitHub repository and push (required for Pages), for example with GitHub CLI:
+  1) cd ${PROJECT_SLUG}
+  2) Open this folder in VS Code and reopen in container when prompted.
+  3) Create a GitHub repository and push (required for Pages), for example with GitHub CLI:
      gh repo create --source . --public --push
      # or set up a remote and push manually:
      # git remote add origin git@github.com:<you>/${PROJECT_SLUG}.git && git push -u origin main
-  3) Enable GitHub Pages in Settings → Pages (build and deployment from GitHub Actions).
-  4) If this is a project page (not user/org page), replace __GITHUB_USER__ in astro.config.mjs with your username.
+  4) Enable GitHub Pages in Settings → Pages (build and deployment from GitHub Actions).
+  5) If this is a project page (not user/org page), replace __GITHUB_USER__ in astro.config.mjs with your username.
 
 Run dev server:
   npm install
