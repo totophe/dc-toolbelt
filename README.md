@@ -50,6 +50,14 @@ Extends the Node.js 24 image with AWS development tools:
 - **AWS CLI v2**: aws command with all services
 - **Pre-configured**: Ready-to-use AWS config directory
 
+### Node.js 24 + Astro (`node24-astro`)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-astro`
+
+Optimized for Astro development:
+- **Everything from `node24`**: Base tooling and shell
+- **Web tooling**: npm-first (pnpm also available), Astro CLI, create-astro
+- **Build essentials**: Light toolchain for native deps when needed
+
 ## 🚀 Quick Start
 
 ### Using with devcontainer.json
@@ -171,6 +179,37 @@ Copy the appropriate template from the `templates/` directory:
 }
 ```
 
+**For Node.js + Astro development:**
+```json
+{
+  "name": "Node 24 Toolbelt (astro)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-astro",
+  "remoteUser": "node",
+  "mounts": [
+    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "extensions": [
+        "astro-build.astro-vscode",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "github.copilot",
+        "github.copilot-chat"
+      ]
+    }
+  },
+  "forwardPorts": [4321],
+  "portsAttributes": { "4321": { "label": "Astro Dev", "onAutoForward": "openBrowser" } },
+  "postStartCommand": "node -v && npm -v && astro --version"
+}
+```
+
 ### Using with Docker
 
 ```bash
@@ -185,6 +224,9 @@ docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-azure
 
 # Node.js + AWS development
 docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-aws
+
+# Node.js + Astro development
+docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-astro
 ```
 
 ## 💾 Persistent Configuration with Volumes
@@ -204,7 +246,7 @@ All templates use **named Docker volumes** instead of bind mounts for CLI config
 
 You can customize volume names in your devcontainer.json to separate configurations per project if needed.
 
-## �🛠 What's Included
+## 🛠 What's Included
 
 ### System Tools
 - **Shell**: Zsh with Oh My Zsh
@@ -246,6 +288,34 @@ You can customize volume names in your devcontainer.json to separate configurati
 - **VS Code Extension**: AWS Toolkit extension pre-configured
 - **Persistent config**: Volume-mounted configuration
 
+### Astro + GitHub scaffold installer
+
+Use the built-in installer to scaffold an Astro site configured for GitHub Pages, with the project at the repository root:
+
+```bash
+# Interactive (prompts for project name)
+curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash
+
+# Non-interactive (pass name as arg)
+curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash -s -- "My Awesome Astro Site"
+
+# Non-interactive via env var
+PROJECT_NAME="My Awesome Astro Site" \
+  curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash
+```
+
+What it does:
+- Takes a project name (via prompt, CLI arg, or PROJECT_NAME env) and derives a lowercase kebab-case slug
+- Copies an Astro skeleton (package.json, astro.config.mjs, src/, public/)
+- Adds a .gitignore suitable for Node/Astro projects
+- Adds a GitHub Pages workflow (.github/workflows/gh-pages.yml)
+- Creates a .devcontainer using the node24-astro image
+- Initializes a git repository (if none exists) and creates an initial commit when possible
+
+Notes:
+- For GitHub Project Pages, update `astro.config.mjs` to use your username in the `site` URL.
+- The `base` is prefilled with the project slug.
+
 ## 📂 Repository Structure
 
 ```
@@ -254,12 +324,15 @@ dc-toolbelt/
 │   ├── node24/         # Node.js 24 base image
 │   ├── node24-gcloud/  # Node.js 24 + Google Cloud image
 │   ├── node24-azure/   # Node.js 24 + Azure image
-│   └── node24-aws/     # Node.js 24 + AWS image
+│   ├── node24-aws/     # Node.js 24 + AWS image
+│   └── node24-astro/   # Node.js 24 + Astro image
 ├── templates/          # Ready-to-use devcontainer.json templates
 │   ├── node24/         # Basic Node.js template
 │   ├── node24-gcloud/  # Node.js + Google Cloud template
 │   ├── node24-azure/   # Node.js + Azure template
-│   └── node24-aws/     # Node.js + AWS template
+│   ├── node24-aws/     # Node.js + AWS template
+│   └── node24-astro/   # Node.js + Astro template
+├── templates/astro-github/  # Astro scaffold + installer for GitHub Pages
 ├── brand/             # Logo and branding assets
 └── README.md
 ```

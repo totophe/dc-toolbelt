@@ -1,0 +1,14 @@
+{
+  "name": "__PROJECT_SLUG__",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "postinstall": "astro telemetry disable || true"
+  },
+  "dependencies": {
+    "astro": "^4.12.0"
+  }
+}

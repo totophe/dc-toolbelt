@@ -23,5 +23,5 @@
       ]
     }
   },
-  "postStartCommand": "aws --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && aws --version"
 }

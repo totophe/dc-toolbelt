@@ -23,5 +23,5 @@
       ]
     }
   },
-  "postStartCommand": "gcloud --version && gsutil --version && bq --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && gcloud --version && gsutil --version && bq --version"
 }

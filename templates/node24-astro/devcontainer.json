@@ -1,0 +1,29 @@
+{
+  "name": "Node 24 Toolbelt (astro)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-astro",
+  "remoteUser": "node",
+  "mounts": [
+    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      },
+      "extensions": [
+        "astro-build.astro-vscode",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "github.copilot",
+        "github.copilot-chat"
+      ]
+    }
+  },
+  "forwardPorts": [4321],
+  "portsAttributes": {
+    "4321": { "label": "Astro Dev", "onAutoForward": "openBrowser" }
+  },
+  "postStartCommand": "node -v && npm -v && astro --version"
+}

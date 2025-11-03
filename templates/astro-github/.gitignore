@@ -1,0 +1,32 @@
+# Node / package managers
+node_modules/
+.pnpm-store/
+.npm/
+
+# Astro build output
+/dist/
+.astro/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+
+# Editor settings
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Local caches
+.cache/
+.parcel-cache/
+
+# Platforms / hosts
+.vercel/
+.netlify/

@@ -75,6 +75,8 @@ jobs:
             context: containers/node24-azure
           - name: aws
             context: containers/node24-aws
+          - name: astro
+            context: containers/node24-astro
     steps:
       - name: Checkout
         uses: actions/checkout@v4

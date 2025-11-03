@@ -25,5 +25,5 @@
       ]
     }
   },
-  "postStartCommand": "node -v && npm -v && gh --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && node -v && npm -v && gh --version"
 }
