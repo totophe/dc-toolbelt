@@ -25,5 +25,5 @@
   "portsAttributes": {
     "4321": { "label": "Astro Dev", "onAutoForward": "openBrowser" }
   },
-  "postStartCommand": "node -v && npm -v && astro --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && node -v && npm -v && astro --version"
 }

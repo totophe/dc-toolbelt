@@ -290,18 +290,18 @@ You can customize volume names in your devcontainer.json to separate configurati
 
 ### Astro + GitHub scaffold installer
 
-Use the built-in installer to scaffold an Astro site configured for GitHub Pages, with the project at the repository root:
+Use the built-in installer to scaffold an Astro site configured for GitHub Pages, creating a new folder named after your project slug:
 
 ```bash
 # Interactive (prompts for project name)
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/refs/heads/main/templates/astro-github/install.sh)"
 
 # Non-interactive (pass name as arg)
-curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash -s -- "My Awesome Astro Site"
+curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/refs/heads/main/templates/astro-github/install.sh | bash -s -- "My Awesome Astro Site"
 
 # Non-interactive via env var
 PROJECT_NAME="My Awesome Astro Site" \
-  curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/main/templates/astro-github/install.sh | bash
+  curl -fsSL https://raw.githubusercontent.com/totophe/dc-toolbelt/refs/heads/main/templates/astro-github/install.sh | bash
 ```
 
 What it does:
@@ -311,10 +311,12 @@ What it does:
 - Adds a GitHub Pages workflow (.github/workflows/gh-pages.yml)
 - Creates a .devcontainer using the node24-astro image
 - Initializes a git repository (if none exists) and creates an initial commit when possible
+- Creates a new directory named after the derived slug and scaffolds the project inside it
 
 Notes:
 - For GitHub Project Pages, update `astro.config.mjs` to use your username in the `site` URL.
 - The `base` is prefilled with the project slug.
+- After running the installer, `cd <your-slug>` before starting the dev server.
 
 ## 📂 Repository Structure
 
