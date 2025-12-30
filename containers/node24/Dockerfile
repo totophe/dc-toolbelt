@@ -7,7 +7,7 @@ USER root
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
      zsh git git-lfs curl wget ca-certificates gnupg nano less openssh-client \
-     jq ripgrep locales postgresql-client sudo procps \
+     jq ripgrep locales postgresql-client sudo procps tree \
   && rm -rf /var/lib/apt/lists/*
 
 # --- Grant passwordless sudo to node user ---
