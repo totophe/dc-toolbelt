@@ -6,7 +6,8 @@ USER root
 # --- Scaleway CLI ---
 # https://github.com/scaleway/scaleway-cli
 RUN arch=$(dpkg --print-architecture) \
-  && curl -fsSL "https://github.com/scaleway/scaleway-cli/releases/latest/download/scaleway-cli_linux_${arch}" -o /usr/local/bin/scw \
+  && SCW_VERSION=$(curl -fsSL https://api.github.com/repos/scaleway/scaleway-cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
+  && curl -fsSL "https://github.com/scaleway/scaleway-cli/releases/download/v${SCW_VERSION}/scaleway-cli_${SCW_VERSION}_linux_${arch}" -o /usr/local/bin/scw \
   && chmod +x /usr/local/bin/scw
 
 # Ensure the default config path exists and is owned by "node"
