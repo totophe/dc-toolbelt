@@ -8,8 +8,6 @@ Extends the [Node.js 24 + Google Cloud](../node24-gcloud/README.md) image with I
 
 - **Everything from `node24-gcloud`**
 - **OpenTofu**: Open source infrastructure as code tool (`tofu`)
-- **Claude CLI**: Anthropic's Claude CLI tool (`claude`)
-- **Extra Tools**: `tree`
 
 ## Usage
 
@@ -23,7 +21,7 @@ Use the `templates/node24-gcloud-tofu/devcontainer.json` template.
   "mounts": [
     "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
     "source=dc-toolbelt-gcloud-config,target=/home/node/.config/gcloud,type=volume",
-    "source=claude-config,target=/home/node/.claude,type=volume"
+    "source=dc-toolbelt-claude-config,target=/home/node/.claude,type=volume"
   ],
   "customizations": {
     "vscode": {
@@ -41,6 +39,6 @@ Use the `templates/node24-gcloud-tofu/devcontainer.json` template.
       ]
     }
   },
-  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && gcloud --version && tofu --version && claude --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config /home/node/.claude || true && gcloud --version && tofu --version && claude --version"
 }
 ```

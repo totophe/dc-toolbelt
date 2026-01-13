@@ -16,7 +16,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get update && apt-get install -y --no-install-recommends tofu \
   && rm -rf /var/lib/apt/lists/*
 
-# --- Claude CLI ---
-RUN npm install -g @anthropic-ai/claude-code
-
 USER node

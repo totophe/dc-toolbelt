@@ -17,12 +17,15 @@ Opinionated devcontainer images for everyday development work. One repository, m
 
 See [IMAGES.md](./IMAGES.md) for a complete list of available images and their details.
 
-- **[Node.js 24 (`node24`)](./containers/node24/README.md)**: Base Node.js environment
+- **[Node.js 24 (`node24`)](./containers/node24/README.md)**: Base Node.js environment with Claude CLI
 - **[Node.js 24 + Google Cloud (`node24-gcloud`)](./containers/node24-gcloud/README.md)**: With Google Cloud CLI
-- **[Node.js 24 + Google Cloud + OpenTofu (`node24-gcloud-tofu`)](./containers/node24-gcloud-tofu/README.md)**: With GCloud, OpenTofu & Claude CLI
+- **[Node.js 24 + Google Cloud + OpenTofu (`node24-gcloud-tofu`)](./containers/node24-gcloud-tofu/README.md)**: With GCloud & OpenTofu
 - **[Node.js 24 + Azure (`node24-azure`)](./containers/node24-azure/README.md)**: With Azure CLI
 - **[Node.js 24 + AWS (`node24-aws`)](./containers/node24-aws/README.md)**: With AWS CLI
 - **[Node.js 24 + Astro (`node24-astro`)](./containers/node24-astro/README.md)**: Optimized for Astro
+- **[Node.js 24 + Python (`node24-python`)](./containers/node24-python/README.md)**: With Python 3
+- **[Node.js 24 + Scaleway (`node24-scaleway`)](./containers/node24-scaleway/README.md)**: With Scaleway CLI
+- **[Node.js 24 + Python + Scaleway (`node24-python-scaleway`)](./containers/node24-python-scaleway/README.md)**: With Python 3 & Scaleway CLI
 
 ## 🚀 Quick Start
 
@@ -206,9 +209,11 @@ All templates use **named Docker volumes** instead of bind mounts for CLI config
 
 ### Volume Names Used
 - `dc-toolbelt-gh-config` - GitHub CLI configuration
+- `dc-toolbelt-claude-config` - Claude CLI configuration
 - `dc-toolbelt-gcloud-config` - Google Cloud CLI configuration
 - `dc-toolbelt-azure-config` - Azure CLI configuration
 - `dc-toolbelt-aws-config` - AWS CLI configuration
+- `dc-toolbelt-scw-config` - Scaleway CLI configuration
 
 You can customize volume names in your devcontainer.json to separate configurations per project if needed.
 
@@ -223,12 +228,13 @@ You can customize volume names in your devcontainer.json to separate configurati
 
 ### Node.js Stack
 - **Runtime**: Node.js 24 (latest LTS)
-- **Global packages**: 
+- **Global packages**:
   - TypeScript
   - ESLint
   - Prettier
   - tsx (TypeScript execution)
   - npm-check-updates
+  - Claude CLI
 
 ### Developer Experience
 - **Aliases**: Common git shortcuts (`gs`, `gc`, `gco`)
@@ -291,15 +297,23 @@ dc-toolbelt/
 ├── containers/          # Dockerfile sources
 │   ├── node24/         # Node.js 24 base image
 │   ├── node24-gcloud/  # Node.js 24 + Google Cloud image
+│   ├── node24-gcloud-tofu/ # Node.js 24 + Google Cloud + OpenTofu image
 │   ├── node24-azure/   # Node.js 24 + Azure image
 │   ├── node24-aws/     # Node.js 24 + AWS image
-│   └── node24-astro/   # Node.js 24 + Astro image
+│   ├── node24-astro/   # Node.js 24 + Astro image
+│   ├── node24-python/  # Node.js 24 + Python image
+│   ├── node24-scaleway/ # Node.js 24 + Scaleway image
+│   └── node24-python-scaleway/ # Node.js 24 + Python + Scaleway image
 ├── templates/          # Ready-to-use devcontainer.json templates
 │   ├── node24/         # Basic Node.js template
 │   ├── node24-gcloud/  # Node.js + Google Cloud template
+│   ├── node24-gcloud-tofu/ # Node.js + Google Cloud + OpenTofu template
 │   ├── node24-azure/   # Node.js + Azure template
 │   ├── node24-aws/     # Node.js + AWS template
-│   └── node24-astro/   # Node.js + Astro template
+│   ├── node24-astro/   # Node.js + Astro template
+│   ├── node24-python/  # Node.js + Python template
+│   ├── node24-scaleway/ # Node.js + Scaleway template
+│   └── node24-python-scaleway/ # Node.js + Python + Scaleway template
 ├── templates/astro-github/  # Astro scaffold + installer for GitHub Pages
 ├── brand/             # Logo and branding assets
 └── README.md

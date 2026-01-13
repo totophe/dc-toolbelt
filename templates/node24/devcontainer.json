@@ -3,7 +3,8 @@
   "image": "ghcr.io/totophe/dc-toolbelt:node24",
   "remoteUser": "node",
   "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
+    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
+    "source=dc-toolbelt-claude-config,target=/home/node/.claude,type=volume"
   ],
   "customizations": {
     "vscode": {
@@ -25,5 +26,5 @@
       ]
     }
   },
-  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && node -v && npm -v && gh --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config /home/node/.claude || true && node -v && npm -v && gh --version && claude --version"
 }

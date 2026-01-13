@@ -81,6 +81,10 @@ jobs:
             context: containers/node24-aws
           - name: astro
             context: containers/node24-astro
+          - name: python
+            context: containers/node24-python
+          - name: scaleway
+            context: containers/node24-scaleway
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,6 +148,8 @@ jobs:
         variant:
           - name: gcloud-tofu
             context: containers/node24-gcloud-tofu
+          - name: python-scaleway
+            context: containers/node24-python-scaleway
     steps:
       - name: Checkout
         uses: actions/checkout@v4

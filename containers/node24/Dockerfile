@@ -32,7 +32,7 @@ RUN mkdir -p -m 755 /etc/apt/keyrings \
   && rm -rf /var/lib/apt/lists/*
 
 # --- Global npm tools (npm-only) ---
-RUN npm i -g typescript eslint prettier tsx npm-check-updates
+RUN npm i -g typescript eslint prettier tsx npm-check-updates @anthropic-ai/claude-code
 
 # --- Shell setup: zsh default for node user ---
 RUN chsh -s /bin/zsh node

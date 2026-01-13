@@ -8,7 +8,7 @@ A comprehensive Node.js development environment based on Debian Bookworm (slim).
 
 - **Node.js 24**: Latest LTS version
 - **System Tools**: Git, GitHub CLI, PostgreSQL client, ripgrep, jq, nano, curl, wget, procps
-- **Node.js Globals**: TypeScript, ESLint, Prettier, tsx, npm-check-updates
+- **Node.js Globals**: TypeScript, ESLint, Prettier, tsx, npm-check-updates, Claude CLI
 - **Shell**: Zsh with Oh My Zsh (robbyrussell theme)
 - **User**: `node` (non-root) with passwordless sudo
 
@@ -22,7 +22,8 @@ Use the `templates/node24/devcontainer.json` template.
   "image": "ghcr.io/totophe/dc-toolbelt:node24",
   "remoteUser": "node",
   "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
+    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
+    "source=dc-toolbelt-claude-config,target=/home/node/.claude,type=volume"
   ],
   "customizations": {
     "vscode": {

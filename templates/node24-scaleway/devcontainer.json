@@ -1,10 +1,10 @@
 {
-  "name": "Node 24 Toolbelt (gcloud + tofu)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-gcloud-tofu",
+  "name": "Node 24 Toolbelt (scaleway)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-scaleway",
   "remoteUser": "node",
   "mounts": [
     "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-gcloud-config,target=/home/node/.config/gcloud,type=volume",
+    "source=dc-toolbelt-scw-config,target=/home/node/.config/scw,type=volume",
     "source=dc-toolbelt-claude-config,target=/home/node/.claude,type=volume"
   ],
   "customizations": {
@@ -16,7 +16,6 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
       },
       "extensions": [
-        "GoogleCloudTools.cloudcode",
         "github.copilot",
         "github.copilot-chat",
         "esbenp.prettier-vscode",
@@ -24,5 +23,5 @@
       ]
     }
   },
-  "postStartCommand": "sudo chown -R node:node /home/node/.config /home/node/.claude || true && gcloud --version && tofu --version && claude --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config /home/node/.claude || true && scw version && claude --version"
 }

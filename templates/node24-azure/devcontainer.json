@@ -4,7 +4,8 @@
   "remoteUser": "node",
   "mounts": [
     "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-azure-config,target=/home/node/.azure,type=volume"
+    "source=dc-toolbelt-azure-config,target=/home/node/.azure,type=volume",
+    "source=dc-toolbelt-claude-config,target=/home/node/.claude,type=volume"
   ],
   "customizations": {
     "vscode": {
@@ -24,5 +25,5 @@
       ]
     }
   },
-  "postStartCommand": "sudo chown -R node:node /home/node/.config || true && az --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.config /home/node/.claude || true && az --version && claude --version"
 }

@@ -8,7 +8,7 @@ This repository provides several pre-configured devcontainer images.
 A comprehensive Node.js development environment with:
 - **Base**: Node.js 24 on Debian Bookworm (slim)
 - **Tools**: Git, GitHub CLI, PostgreSQL client, ripgrep, jq, nano, curl, wget
-- **Node.js globals**: TypeScript, ESLint, Prettier, tsx, npm-check-updates
+- **Node.js globals**: TypeScript, ESLint, Prettier, tsx, npm-check-updates, Claude CLI
 - **Shell**: Zsh with Oh My Zsh (robbyrussell theme)
 - **User**: `node` with helpful aliases and git configuration
 
@@ -27,8 +27,6 @@ Extends the Node.js 24 image with Google Cloud development tools:
 Extends the Node.js 24 + Google Cloud image with Infrastructure as Code tools:
 - **Everything from `node24-gcloud`**: All Node.js and Google Cloud tools
 - **OpenTofu**: Open source infrastructure as code tool
-- **Claude CLI**: Anthropic's Claude CLI tool
-- **Extra Tools**: `tree`
 
 ## [Node.js 24 + Azure (`node24-azure`)](./containers/node24-azure/README.md)
 **Image**: `ghcr.io/totophe/dc-toolbelt:node24-azure`
@@ -53,3 +51,27 @@ Optimized for Astro development:
 - **Everything from `node24`**: Base tooling and shell
 - **Web tooling**: npm-first (pnpm also available), Astro CLI, create-astro
 - **Build essentials**: Light toolchain for native deps when needed
+
+## [Node.js 24 + Python (`node24-python`)](./containers/node24-python/README.md)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-python`
+
+Extends the Node.js 24 image with Python development tools:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Python 3**: Python runtime with pip and venv support
+
+## [Node.js 24 + Scaleway (`node24-scaleway`)](./containers/node24-scaleway/README.md)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-scaleway`
+
+Extends the Node.js 24 image with Scaleway cloud development tools:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Scaleway CLI**: scw command for managing Scaleway resources
+- **Pre-configured**: Ready-to-use Scaleway config directory
+
+## [Node.js 24 + Python + Scaleway (`node24-python-scaleway`)](./containers/node24-python-scaleway/README.md)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-python-scaleway`
+
+Combines Python and Scaleway cloud tools:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Python 3**: Python runtime with pip and venv support
+- **Scaleway CLI**: scw command for managing Scaleway resources
+- **Pre-configured**: Ready-to-use Scaleway config directory
