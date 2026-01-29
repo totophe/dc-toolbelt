@@ -94,6 +94,7 @@ RUN mkdir -p /home/node/.dc-toolbelt/gh \
   && rm -rf /home/node/.config/gh /home/node/.claude /home/node/.config/gemini \
             /home/node/.config/gcloud /home/node/.azure /home/node/.aws \
             /home/node/.config/scw /home/node/.pulumi \
+  && mkdir -p /home/node/.config \
   && ln -s /home/node/.dc-toolbelt/gh      /home/node/.config/gh \
   && ln -s /home/node/.dc-toolbelt/claude   /home/node/.claude \
   && ln -s /home/node/.dc-toolbelt/gemini   /home/node/.config/gemini \
@@ -102,9 +103,8 @@ RUN mkdir -p /home/node/.dc-toolbelt/gh \
   && ln -s /home/node/.dc-toolbelt/aws      /home/node/.aws \
   && ln -s /home/node/.dc-toolbelt/scw      /home/node/.config/scw \
   && ln -s /home/node/.dc-toolbelt/pulumi   /home/node/.pulumi \
-  && chown -R node:node /home/node/.dc-toolbelt \
-  && chown -h node:node /home/node/.claude /home/node/.azure /home/node/.aws /home/node/.pulumi \
-  && chown -h node:node /home/node/.config/gh /home/node/.config/gemini /home/node/.config/gcloud /home/node/.config/scw
+  && chown -R node:node /home/node/.dc-toolbelt /home/node/.config \
+  && chown -h node:node /home/node/.claude /home/node/.azure /home/node/.aws /home/node/.pulumi
 
 USER node
 

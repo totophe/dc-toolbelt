@@ -15,18 +15,10 @@ Opinionated devcontainer images for everyday development work. One repository, m
 
 ## 📦 Available Images
 
-See [IMAGES.md](./IMAGES.md) for a complete list of available images and their details.
-
 - **[Node.js 24 (`node24`)](./containers/node24/README.md)**: Base Node.js environment with Claude CLI
-- **[Node.js 24 + Google Cloud (`node24-gcloud`)](./containers/node24-gcloud/README.md)**: With Google Cloud CLI
-- **[Node.js 24 + Google Cloud + OpenTofu (`node24-gcloud-tofu`)](./containers/node24-gcloud-tofu/README.md)**: With GCloud & OpenTofu
-- **[Node.js 24 + Azure (`node24-azure`)](./containers/node24-azure/README.md)**: With Azure CLI
-- **[Node.js 24 + AWS (`node24-aws`)](./containers/node24-aws/README.md)**: With AWS CLI
-- **[Node.js 24 + Astro (`node24-astro`)](./containers/node24-astro/README.md)**: Optimized for Astro
-- **[Node.js 24 + Python (`node24-python`)](./containers/node24-python/README.md)**: With Python 3
-- **[Node.js 24 + Scaleway (`node24-scaleway`)](./containers/node24-scaleway/README.md)**: With Scaleway CLI
-- **[Node.js 24 + Python + Scaleway (`node24-python-scaleway`)](./containers/node24-python-scaleway/README.md)**: With Python 3 & Scaleway CLI
-- **[Node.js 24 Toolbox (`node24-toolbox`)](./containers/node24-toolbox/README.md)**: Unified image with all tools
+- **[Node.js 24 Toolbox (`node24-toolbox`)](./containers/node24-toolbox/README.md)**: Unified image with all cloud CLIs, IaC, Python, Astro, and AI tools
+
+Specialized single-tool images are also available. See [IMAGES.md](./IMAGES.md) for the complete list.
 
 ## 🚀 Quick Start
 
@@ -34,7 +26,7 @@ See [IMAGES.md](./IMAGES.md) for a complete list of available images and their d
 
 Copy the appropriate template from the `templates/` directory:
 
-**For Node.js development:**
+**Base Node.js environment:**
 ```json
 {
   "name": "Node 24 Toolbelt",
@@ -61,142 +53,52 @@ Copy the appropriate template from the `templates/` directory:
 }
 ```
 
-**For Node.js + Google Cloud development:**
+**Toolbox (all tools in one image):**
 ```json
 {
-  "name": "Node 24 Toolbelt (gcloud)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-gcloud",
+  "name": "Node 24 Toolbelt (toolbox)",
+  "image": "ghcr.io/totophe/dc-toolbelt:node24-toolbox",
   "remoteUser": "node",
   "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-gcloud-config,target=/home/node/.config/gcloud,type=volume"
+    "source=dc-toolbelt-config,target=/home/node/.dc-toolbelt,type=volume"
   ],
   "customizations": {
     "vscode": {
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
         "editor.formatOnSave": true,
+        "editor.inlineSuggest.enabled": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode"
       },
       "extensions": [
         "GoogleCloudTools.cloudcode",
-        "github.copilot",
-        "github.copilot-chat",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
-      ]
-    }
-  }
-}
-```
-
-**For Node.js + Azure development:**
-```json
-{
-  "name": "Node 24 Toolbelt (azure)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-azure",
-  "remoteUser": "node",
-  "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-azure-config,target=/home/node/.azure,type=volume"
-  ],
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "extensions": [
         "ms-vscode.azure-account",
         "ms-azuretools.vscode-azureresourcegroups",
-        "github.copilot",
-        "github.copilot-chat",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
-      ]
-    }
-  }
-}
-```
-
-**For Node.js + AWS development:**
-```json
-{
-  "name": "Node 24 Toolbelt (aws)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-aws",
-  "remoteUser": "node",
-  "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume",
-    "source=dc-toolbelt-aws-config,target=/home/node/.aws,type=volume"
-  ],
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "extensions": [
         "amazonwebservices.aws-toolkit-vscode",
+        "astro-build.astro-vscode",
+        "ms-python.python",
         "github.copilot",
         "github.copilot-chat",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint"
-      ]
-    }
-  }
-}
-```
-
-**For Node.js + Astro development:**
-```json
-{
-  "name": "Node 24 Toolbelt (astro)",
-  "image": "ghcr.io/totophe/dc-toolbelt:node24-astro",
-  "remoteUser": "node",
-  "mounts": [
-    "source=dc-toolbelt-gh-config,target=/home/node/.config/gh,type=volume"
-  ],
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-      "extensions": [
-        "astro-build.astro-vscode",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
-        "github.copilot",
-        "github.copilot-chat"
+        "hashicorp.hcl"
       ]
     }
   },
   "forwardPorts": [4321],
-  "portsAttributes": { "4321": { "label": "Astro Dev", "onAutoForward": "openBrowser" } },
-  "postStartCommand": "node -v && npm -v && astro --version"
+  "portsAttributes": { "4321": { "label": "Astro Dev", "onAutoForward": "notify" } },
+  "postStartCommand": "sudo chown -R node:node /home/node/.dc-toolbelt || true && node --version && gcloud --version && az --version && aws --version && scw version && tofu --version && pulumi version && python --version && astro --version && claude --version && gemini --version"
 }
 ```
 
 ### Using with Docker
 
 ```bash
-# Node.js development
+# Base Node.js environment
 docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24
 
-# Node.js + Google Cloud development
-docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-gcloud
-
-# Node.js + Azure development
-docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-azure
-
-# Node.js + AWS development
-docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-aws
-
-# Node.js + Astro development
-docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-astro
+# Toolbox with all tools
+docker run -it --rm ghcr.io/totophe/dc-toolbelt:node24-toolbox
 ```
 
 ## 💾 Persistent Configuration with Volumes
@@ -208,59 +110,26 @@ All templates use **named Docker volumes** instead of bind mounts for CLI config
 - ✅ **No host filesystem dependencies**: Works consistently across different machines
 - ✅ **Better performance**: Especially on macOS and Windows
 
-### Volume Names Used
-- `dc-toolbelt-gh-config` - GitHub CLI configuration
-- `dc-toolbelt-claude-config` - Claude CLI configuration
-- `dc-toolbelt-gcloud-config` - Google Cloud CLI configuration
-- `dc-toolbelt-azure-config` - Azure CLI configuration
-- `dc-toolbelt-aws-config` - AWS CLI configuration
-- `dc-toolbelt-scw-config` - Scaleway CLI configuration
-- `dc-toolbelt-config` - Unified volume for the toolbox image (all tool configs via symlinks)
-
-You can customize volume names in your devcontainer.json to separate configurations per project if needed.
+The **toolbox** image uses a single volume (`dc-toolbelt-config`) with symlinks to each tool's expected config path. The specialized images use one volume per tool. See [IMAGES.md](./IMAGES.md) for details.
 
 ## 🛠 What's Included
 
-### System Tools
-- **Shell**: Zsh with Oh My Zsh
+### Base Image (`node24`)
+- **Shell**: Zsh with Oh My Zsh, helpful aliases (`gs`, `gc`, `gco`, `ll`, `la`)
 - **Version Control**: Git + Git LFS + GitHub CLI
 - **Database**: PostgreSQL client (psql, pg_dump, pg_restore)
 - **Utilities**: ripgrep, jq, curl, wget, nano, less, sudo (passwordless)
+- **Node.js 24**: TypeScript, ESLint, Prettier, tsx, npm-check-updates, Claude CLI
 - **Locale**: UTF-8 configured
 
-### Node.js Stack
-- **Runtime**: Node.js 24 (latest LTS)
-- **Global packages**:
-  - TypeScript
-  - ESLint
-  - Prettier
-  - tsx (TypeScript execution)
-  - npm-check-updates
-  - Claude CLI
+### Toolbox Image (`node24-toolbox`)
 
-### Developer Experience
-- **Aliases**: Common git shortcuts (`gs`, `gc`, `gco`)
-- **Shell completion**: npm completion enabled
-- **Safe directories**: Configured for devcontainer workspaces
-- **Default formatter**: Prettier with VS Code integration
-
-### Cloud Platform Tools
-
-#### Google Cloud *(node24-gcloud only)*
-- **Google Cloud CLI**: gcloud, gsutil, bq commands
-- **GKE Auth Plugin**: Kubernetes cluster authentication
-- **VS Code Extension**: Google Cloud Code extension pre-configured
-- **Persistent config**: Volume-mounted configuration
-
-#### Azure *(node24-azure only)*
-- **Azure CLI**: az command with all extensions
-- **VS Code Extensions**: Azure Account and Resource Groups extensions
-- **Persistent config**: Volume-mounted configuration
-
-#### AWS *(node24-aws only)*
-- **AWS CLI v2**: aws command with all services
-- **VS Code Extension**: AWS Toolkit extension pre-configured
-- **Persistent config**: Volume-mounted configuration
+Everything from the base, plus:
+- **Cloud CLIs**: Google Cloud (gcloud, gsutil, bq + GKE Auth Plugin), Azure CLI, AWS CLI v2, Scaleway CLI
+- **IaC**: OpenTofu, Pulumi
+- **AI**: Gemini CLI
+- **Languages**: Python 3 (pip, venv)
+- **Frameworks**: Astro + create-astro, build-essential
 
 ### Astro + GitHub scaffold installer
 
