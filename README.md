@@ -26,6 +26,7 @@ See [IMAGES.md](./IMAGES.md) for a complete list of available images and their d
 - **[Node.js 24 + Python (`node24-python`)](./containers/node24-python/README.md)**: With Python 3
 - **[Node.js 24 + Scaleway (`node24-scaleway`)](./containers/node24-scaleway/README.md)**: With Scaleway CLI
 - **[Node.js 24 + Python + Scaleway (`node24-python-scaleway`)](./containers/node24-python-scaleway/README.md)**: With Python 3 & Scaleway CLI
+- **[Node.js 24 Toolbox (`node24-toolbox`)](./containers/node24-toolbox/README.md)**: Unified image with all tools
 
 ## 🚀 Quick Start
 
@@ -214,6 +215,7 @@ All templates use **named Docker volumes** instead of bind mounts for CLI config
 - `dc-toolbelt-azure-config` - Azure CLI configuration
 - `dc-toolbelt-aws-config` - AWS CLI configuration
 - `dc-toolbelt-scw-config` - Scaleway CLI configuration
+- `dc-toolbelt-config` - Unified volume for the toolbox image (all tool configs via symlinks)
 
 You can customize volume names in your devcontainer.json to separate configurations per project if needed.
 
@@ -303,7 +305,8 @@ dc-toolbelt/
 │   ├── node24-astro/   # Node.js 24 + Astro image
 │   ├── node24-python/  # Node.js 24 + Python image
 │   ├── node24-scaleway/ # Node.js 24 + Scaleway image
-│   └── node24-python-scaleway/ # Node.js 24 + Python + Scaleway image
+│   ├── node24-python-scaleway/ # Node.js 24 + Python + Scaleway image
+│   └── node24-toolbox/ # Unified toolbox (all tools combined)
 ├── templates/          # Ready-to-use devcontainer.json templates
 │   ├── node24/         # Basic Node.js template
 │   ├── node24-gcloud/  # Node.js + Google Cloud template
@@ -313,7 +316,8 @@ dc-toolbelt/
 │   ├── node24-astro/   # Node.js + Astro template
 │   ├── node24-python/  # Node.js + Python template
 │   ├── node24-scaleway/ # Node.js + Scaleway template
-│   └── node24-python-scaleway/ # Node.js + Python + Scaleway template
+│   ├── node24-python-scaleway/ # Node.js + Python + Scaleway template
+│   └── node24-toolbox/ # Unified toolbox template
 ├── templates/astro-github/  # Astro scaffold + installer for GitHub Pages
 ├── brand/             # Logo and branding assets
 └── README.md

@@ -150,6 +150,8 @@ jobs:
             context: containers/node24-gcloud-tofu
           - name: python-scaleway
             context: containers/node24-python-scaleway
+          - name: toolbox
+            context: containers/node24-toolbox
     steps:
       - name: Checkout
         uses: actions/checkout@v4

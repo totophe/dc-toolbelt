@@ -21,7 +21,8 @@ dc-toolbelt/
 │   ├── node24-astro/          # Astro framework
 │   ├── node24-python/         # Python 3
 │   ├── node24-scaleway/       # Scaleway CLI
-│   └── node24-python-scaleway/ # Python + Scaleway
+│   ├── node24-python-scaleway/ # Python + Scaleway
+│   └── node24-toolbox/        # Unified toolbox (all tools)
 ├── templates/                  # Ready-to-use devcontainer.json files
 │   └── <same variants>/       # One folder per image variant
 ├── brand/                      # Logo and branding assets
@@ -42,14 +43,15 @@ node24 (base)
 ├── node24-astro
 ├── node24-python
 │   └── node24-python-scaleway
-└── node24-scaleway
+├── node24-scaleway
+└── node24-toolbox          # all tools in one image
 ```
 
 ## Base Image (`node24`) Includes
 
 - Node.js 24 on Debian Bookworm (slim)
 - System tools: Git, GitHub CLI, PostgreSQL client, ripgrep, jq, nano, curl, wget, procps, tree
-- Node.js globals: TypeScript, ESLint, Prettier, tsx, npm-check-updates, **Claude CLI**
+- Node.js globals: TypeScript, ESLint, Prettier, tsx, npm-check-updates, **Claude CLI**, **Gemini CLI**
 - Shell: Zsh with Oh My Zsh (robbyrussell theme)
 - User: `node` with passwordless sudo
 
@@ -63,6 +65,7 @@ The workflow has **3 stages** that run sequentially:
 3. **build-extra**: Builds variants that depend on other variants (runs in parallel via matrix):
    - gcloud-tofu (depends on gcloud)
    - python-scaleway (depends on python)
+   - toolbox (depends on node24; placed here to avoid slowing build-cloud)
 
 To add a new image:
 1. Create `containers/<variant>/Dockerfile`
@@ -94,6 +97,7 @@ All devcontainer templates use named Docker volumes for configuration persistenc
 - `dc-toolbelt-azure-config` - Azure CLI (`/home/node/.azure`)
 - `dc-toolbelt-aws-config` - AWS CLI (`/home/node/.aws`)
 - `dc-toolbelt-scw-config` - Scaleway CLI (`/home/node/.config/scw`)
+- `dc-toolbelt-config` - Unified volume for toolbox (`/home/node/.dc-toolbelt`, uses symlinks)
 
 ## Common Patterns
 

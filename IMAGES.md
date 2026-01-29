@@ -75,3 +75,19 @@ Combines Python and Scaleway cloud tools:
 - **Python 3**: Python runtime with pip and venv support
 - **Scaleway CLI**: scw command for managing Scaleway resources
 - **Pre-configured**: Ready-to-use Scaleway config directory
+
+## [Node.js 24 Toolbox (`node24-toolbox`)](./containers/node24-toolbox/README.md)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox`
+
+The unified "kitchen sink" image with every tool included:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Google Cloud CLI**: gcloud, gsutil, bq + GKE Auth Plugin
+- **Azure CLI**: az command with all extensions
+- **AWS CLI v2**: aws command with all services
+- **Scaleway CLI**: scw command for managing Scaleway resources
+- **Pulumi**: Infrastructure as code across any cloud
+- **OpenTofu**: Open source infrastructure as code tool
+- **Gemini CLI**: Google's AI coding assistant
+- **Python 3**: Python runtime with pip and venv support
+- **Astro**: Astro CLI + create-astro + build-essential
+- **Single-volume credentials**: All configs in one Docker volume with symlinks
