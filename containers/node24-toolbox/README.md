@@ -15,6 +15,8 @@ The unified "kitchen sink" image that includes every tool from every dc-toolbelt
 - **OpenTofu**: Open source Terraform alternative
 - **Gemini CLI**: Google's AI coding assistant
 - **Python 3**: Python runtime with pip and venv support
+- **1Password CLI**: `op` command for accessing vault secrets (authenticate via `OP_SERVICE_ACCOUNT_TOKEN`)
+- **Ansible**: ansible-core for configuration management
 - **Astro**: Astro CLI + create-astro + build-essential for native deps
 
 ## Single-Volume Credential Strategy
@@ -30,6 +32,7 @@ Unlike the specialized images which use one Docker volume per tool, the toolbox 
 ├── azure/       → /home/node/.azure
 ├── aws/         → /home/node/.aws
 ├── scw/         → /home/node/.config/scw
+├── op/          → /home/node/.config/op
 └── pulumi/      → /home/node/.pulumi
 ```
 
@@ -52,6 +55,19 @@ Use the template from `templates/node24-toolbox/devcontainer.json`, or add to yo
   ]
 }
 ```
+
+## 1Password Integration
+
+The `op` CLI is pre-installed. To authenticate, set `OP_SERVICE_ACCOUNT_TOKEN` on your host before launching VS Code, or add it to your shell profile:
+
+```bash
+export OP_SERVICE_ACCOUNT_TOKEN="your-token-here"
+```
+
+The devcontainer template forwards this env var into the container via `remoteEnv`. Once authenticated you can:
+- `op read "op://vault/item/field"` — fetch a secret
+- `op run --env-file=.env -- command` — inject secrets into a process
+- `op inject -i template.env -o .env` — resolve secret references in config files
 
 ## Image Size
 

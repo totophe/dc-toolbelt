@@ -22,7 +22,9 @@ dc-toolbelt/
 │   ├── node24-python/         # Python 3
 │   ├── node24-scaleway/       # Scaleway CLI
 │   ├── node24-python-scaleway/ # Python + Scaleway
-│   └── node24-toolbox/        # Unified toolbox (all tools)
+│   ├── node24-toolbox-code/   # Toolbox stage 1: languages, frameworks, AI
+│   ├── node24-toolbox-iac/    # Toolbox stage 2: IaC, secrets, config mgmt
+│   └── node24-toolbox/        # Toolbox stage 3: cloud CLIs (full)
 ├── templates/                  # Ready-to-use devcontainer.json files
 │   └── <same variants>/       # One folder per image variant
 ├── brand/                      # Logo and branding assets
@@ -44,20 +46,28 @@ node24 (base)
 ├── node24-python
 │   └── node24-python-scaleway
 ├── node24-scaleway
-└── node24-toolbox          # all tools in one image
+└── node24-toolbox-code          # languages, frameworks, AI
+    └── node24-toolbox-iac       # + IaC, secrets, config mgmt
+        └── node24-toolbox       # + cloud CLIs (full kitchen sink)
 ```
 
 ## Base Image (`node24`) Includes
 
 - Node.js 24 on Debian Bookworm (slim)
 - System tools: Git, GitHub CLI, PostgreSQL client, ripgrep, jq, nano, curl, wget, procps, tree
-- Node.js globals: TypeScript, ESLint, Prettier, tsx, npm-check-updates, **Claude CLI**, **Gemini CLI**
+- Node.js globals: TypeScript, ESLint, Prettier, tsx, npm-check-updates, **Claude CLI**
 - Shell: Zsh with Oh My Zsh (robbyrussell theme)
 - User: `node` with passwordless sudo
 
 ## CI/CD Workflow (`.github/workflows/build.yml`)
 
-The workflow has **3 stages** that run sequentially:
+The workflow has two parallel chains after the base build:
+
+```
+build-base ──┬── build-cloud ── build-extra
+             │
+             └── build-toolbox-code ── build-toolbox-iac ── build-toolbox
+```
 
 1. **build-base**: Builds the `node24` base image
 2. **build-cloud**: Builds variants that depend on `node24` (runs in parallel via matrix):
@@ -65,15 +75,16 @@ The workflow has **3 stages** that run sequentially:
 3. **build-extra**: Builds variants that depend on other variants (runs in parallel via matrix):
    - gcloud-tofu (depends on gcloud)
    - python-scaleway (depends on python)
-   - toolbox (depends on node24; placed here to avoid slowing build-cloud)
+4. **build-toolbox-code** → **build-toolbox-iac** → **build-toolbox**: Sequential toolbox chain (runs in parallel with cloud/extra)
 
 To add a new image:
 1. Create `containers/<variant>/Dockerfile`
 2. Create `templates/<variant>/devcontainer.json`
 3. Create `containers/<variant>/README.md`
-4. Add to the appropriate matrix in `build.yml`:
+4. Add to the appropriate job in `build.yml`:
    - If it extends `node24`: add to `build-cloud` matrix
    - If it extends another variant: add to `build-extra` matrix
+   - If it extends a toolbox stage: add to the toolbox chain
 5. Update `IMAGES.md` with the new variant
 6. Update `README.md` if needed (available images list)
 

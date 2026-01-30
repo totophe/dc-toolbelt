@@ -76,6 +76,27 @@ Combines Python and Scaleway cloud tools:
 - **Scaleway CLI**: scw command for managing Scaleway resources
 - **Pre-configured**: Ready-to-use Scaleway config directory
 
+## [Node.js 24 Toolbox Code (`node24-toolbox-code`)](./containers/node24-toolbox-code/)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox-code`
+
+Full-stack dev environment without cloud/IaC tools:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Python 3**: Python runtime with pip, venv, and build-essential
+- **Astro**: Astro CLI + create-astro
+- **Gemini CLI**: Google's AI coding assistant
+- **Single-volume credentials**: gh, claude, gemini symlinks
+
+## [Node.js 24 Toolbox IaC (`node24-toolbox-iac`)](./containers/node24-toolbox-iac/)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox-iac`
+
+Dev + infrastructure work without cloud CLIs:
+- **Everything from `node24-toolbox-code`**: All code/framework tools
+- **OpenTofu**: Open source infrastructure as code tool
+- **Pulumi**: Infrastructure as code across any cloud
+- **1Password CLI**: `op` command for vault secrets (via `OP_SERVICE_ACCOUNT_TOKEN`)
+- **Ansible**: ansible-core for configuration management
+- **Single-volume credentials**: adds op, pulumi symlinks
+
 ## [Node.js 24 Toolbox (`node24-toolbox`)](./containers/node24-toolbox/README.md)
 **Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox`
 
@@ -88,6 +109,8 @@ The unified "kitchen sink" image with every tool included:
 - **Pulumi**: Infrastructure as code across any cloud
 - **OpenTofu**: Open source infrastructure as code tool
 - **Gemini CLI**: Google's AI coding assistant
+- **1Password CLI**: `op` command for vault secrets (via `OP_SERVICE_ACCOUNT_TOKEN`)
+- **Ansible**: ansible-core for configuration management
 - **Python 3**: Python runtime with pip and venv support
 - **Astro**: Astro CLI + create-astro + build-essential
 - **Single-volume credentials**: All configs in one Docker volume with symlinks

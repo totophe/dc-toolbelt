@@ -24,13 +24,17 @@
         "github.copilot-chat",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
-        "hashicorp.hcl"
+        "hashicorp.hcl",
+        "ms-toolsai.jupyter"
       ]
     }
+  },
+  "remoteEnv": {
+    "OP_SERVICE_ACCOUNT_TOKEN": "${localEnv:OP_SERVICE_ACCOUNT_TOKEN}"
   },
   "forwardPorts": [4321],
   "portsAttributes": {
     "4321": { "label": "Astro Dev", "onAutoForward": "notify" }
   },
-  "postStartCommand": "sudo chown -R node:node /home/node/.dc-toolbelt || true && node --version && gcloud --version && az --version && aws --version && scw version && tofu --version && pulumi version && python --version && astro --version && claude --version && gemini --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.dc-toolbelt || true && node --version && gcloud --version && az --version && aws --version && scw version && tofu --version && pulumi version && op --version && ansible --version && python --version && astro --version && claude --version && gemini --version"
 }

@@ -85,9 +85,12 @@ Copy the appropriate template from the `templates/` directory:
       ]
     }
   },
+  "remoteEnv": {
+    "OP_SERVICE_ACCOUNT_TOKEN": "${localEnv:OP_SERVICE_ACCOUNT_TOKEN}"
+  },
   "forwardPorts": [4321],
   "portsAttributes": { "4321": { "label": "Astro Dev", "onAutoForward": "notify" } },
-  "postStartCommand": "sudo chown -R node:node /home/node/.dc-toolbelt || true && node --version && gcloud --version && az --version && aws --version && scw version && tofu --version && pulumi version && python --version && astro --version && claude --version && gemini --version"
+  "postStartCommand": "sudo chown -R node:node /home/node/.dc-toolbelt || true && node --version && gcloud --version && az --version && aws --version && scw version && tofu --version && pulumi version && op --version && ansible --version && python --version && astro --version && claude --version && gemini --version"
 }
 ```
 
@@ -126,7 +129,8 @@ The **toolbox** image uses a single volume (`dc-toolbelt-config`) with symlinks 
 
 Everything from the base, plus:
 - **Cloud CLIs**: Google Cloud (gcloud, gsutil, bq + GKE Auth Plugin), Azure CLI, AWS CLI v2, Scaleway CLI
-- **IaC**: OpenTofu, Pulumi
+- **IaC / Config Mgmt**: OpenTofu, Pulumi, Ansible
+- **Secrets**: 1Password CLI (`op`)
 - **AI**: Gemini CLI
 - **Languages**: Python 3 (pip, venv)
 - **Frameworks**: Astro + create-astro, build-essential
