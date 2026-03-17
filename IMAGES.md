@@ -76,6 +76,20 @@ Combines Python and Scaleway cloud tools:
 - **Scaleway CLI**: scw command for managing Scaleway resources
 - **Pre-configured**: Ready-to-use Scaleway config directory
 
+## [Node.js 24 Toolbox Light (`node24-toolbox-light`)](./containers/node24-toolbox-light/)
+**Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox-light`
+
+Opinionated mid-weight image: Node + Python + Rust + Astro + Ansible + GCP + Scaleway + 1Password:
+- **Everything from `node24`**: All Node.js tools and configurations
+- **Python 3**: Python runtime with pip, venv, and build-essential
+- **Rust**: Stable toolchain via rustup (cargo, rustc, rustfmt, clippy)
+- **Astro**: Astro CLI + create-astro
+- **Ansible**: ansible-core for configuration management
+- **Google Cloud CLI**: gcloud, gsutil, bq + GKE Auth Plugin
+- **Scaleway CLI**: scw command for managing Scaleway resources
+- **1Password CLI**: `op` command for vault secrets (via `OP_SERVICE_ACCOUNT_TOKEN`)
+- **Single-volume credentials**: gh, claude, op, gcloud, scw symlinks
+
 ## [Node.js 24 Toolbox Code (`node24-toolbox-code`)](./containers/node24-toolbox-code/)
 **Image**: `ghcr.io/totophe/dc-toolbelt:node24-toolbox-code`
 

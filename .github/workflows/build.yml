@@ -202,6 +202,64 @@ jobs:
             org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe
             org.opencontainers.image.licenses=MIT
 
+  build-toolbox-light:
+    needs: build-base
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive version variables
+        id: ver
+        shell: bash
+        run: |
+          echo "is_tag=false" >> "$GITHUB_OUTPUT"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" =~ ^v[0-9]+(\.[0-9]+){0,2}$ ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+            IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION}"
+            echo "is_tag=true"     >> "$GITHUB_OUTPUT"
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+            echo "major=${MAJOR}"  >> "$GITHUB_OUTPUT"
+            [[ -n "${MINOR}" ]] && echo "minor=${MINOR}" >> "$GITHUB_OUTPUT"
+            [[ -n "${PATCH}" ]] && echo "patch=${PATCH}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build & Push node24-toolbox-light
+        uses: docker/build-push-action@v6
+        with:
+          context: containers/node24-toolbox-light
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/totophe/dc-toolbelt:node24-toolbox-light
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-toolbox-light', steps.ver.outputs.version) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && format('ghcr.io/totophe/dc-toolbelt:v{0}-node24-toolbox-light', steps.ver.outputs.major) || '' }}
+            ${{ (steps.ver.outputs.is_tag == 'true' && steps.ver.outputs.minor != '') && format('ghcr.io/totophe/dc-toolbelt:v{0}.{1}-node24-toolbox-light', steps.ver.outputs.major, steps.ver.outputs.minor) || '' }}
+            ${{ steps.ver.outputs.is_tag == 'true' && 'ghcr.io/totophe/dc-toolbelt:latest-node24-toolbox-light' || '' }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.description=dc-toolbelt - DevContainer images by totophe
+            org.opencontainers.image.licenses=MIT
+
   # =========================================================================
   # Toolbox chain: code → iac → toolbox (runs in parallel with cloud/extra)
   # =========================================================================
