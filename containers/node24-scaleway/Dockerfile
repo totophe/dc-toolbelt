@@ -5,8 +5,8 @@ USER root
 
 # --- Scaleway CLI ---
 # https://github.com/scaleway/scaleway-cli
+ARG SCW_VERSION=2.53.0
 RUN arch=$(dpkg --print-architecture) \
-  && SCW_VERSION=$(curl -fsSL https://api.github.com/repos/scaleway/scaleway-cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/') \
   && curl -fsSL "https://github.com/scaleway/scaleway-cli/releases/download/v${SCW_VERSION}/scaleway-cli_${SCW_VERSION}_linux_${arch}" -o /usr/local/bin/scw \
   && chmod +x /usr/local/bin/scw
 
