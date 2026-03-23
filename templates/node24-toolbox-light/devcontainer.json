@@ -15,7 +15,7 @@
       },
       "extensions": [
         "GoogleCloudTools.cloudcode",
-        "anthropics.claude-code",
+        "Anthropic.claude-code",
         "rust-lang.rust-analyzer",
         "ms-python.python",
         "astro-build.astro-vscode",
